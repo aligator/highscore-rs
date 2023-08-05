@@ -1,0 +1,8 @@
+### Create a new highscore
+POST http://localhost:8000/highscore
+Accept: application/json
+
+{
+  "name": "AC",
+  "score": 999.99
+}
