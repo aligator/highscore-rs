@@ -3,6 +3,6 @@ POST http://localhost:8000/highscore
 Accept: application/json
 
 {
-  "name": "AC",
+  "name": "HUHU",
   "score": 999.99
 }
