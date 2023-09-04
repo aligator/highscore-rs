@@ -5,6 +5,6 @@ diesel::table! {
         id -> Integer,
         name -> Text,
         score -> Integer,
-        created_at -> Nullable<Timestamp>,
+        created_at -> Timestamp,
     }
 }
