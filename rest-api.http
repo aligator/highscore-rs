@@ -4,5 +4,5 @@ Accept: application/json
 
 {
   "name": "HUHU",
-  "score": 999.99
+  "score": 999999999
 }

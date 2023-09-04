@@ -6,5 +6,5 @@ use serde::{Deserialize, Serialize};
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]
 pub struct CreateHighscore {
     pub name: String,
-    pub score: f32,
+    pub score: i32,
 }

@@ -6,6 +6,7 @@ use std::error::Error;
 mod api;
 mod config;
 pub mod db;
+pub mod model;
 pub mod schema;
 pub mod service;
 

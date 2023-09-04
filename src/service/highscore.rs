@@ -1,5 +1,5 @@
-use crate::api::model;
 use crate::db::DB;
+use crate::model;
 use crate::schema;
 use diesel::RunQueryDsl;
 
@@ -14,7 +14,7 @@ impl HighscoreService {
 
     pub fn create_highscore(
         &self,
-        highscore: model::CreateHighscore,
+        highscore: model::highscore::CreateHighscore,
     ) -> Result<(), diesel::result::Error> {
         let mut conn = self.db.pool.get().unwrap();
 
