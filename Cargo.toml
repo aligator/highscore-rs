@@ -12,6 +12,7 @@ license = "MIT"
 
 [dependencies]
 diesel = {version = "2.1.0", features = ["sqlite", "time", "r2d2", "returning_clauses_for_sqlite_3_35"]}
+diesel_migrations = "2.1.0"
 dotenvy = "0.15.7"
 rocket = { version = "0.5.0-rc.3", features = ["json"] }
 serde = "1.0.181"
