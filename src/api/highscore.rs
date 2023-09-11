@@ -2,7 +2,7 @@ use rocket::http::Status;
 use rocket::serde::json::Json;
 use rocket::{get, post, routes, Route, State};
 
-use crate::api::dto::highscore::NewHighscoreDTO;
+use crate::api::dto::highscore::{HighscoreDTO, NewHighscoreDTO};
 use crate::api::dto::IdDTO;
 use crate::model;
 use crate::service::highscore::HighscoreService;
@@ -31,10 +31,23 @@ async fn get_highscores(
     highscore: &State<HighscoreService>,
     page: i64,
     page_size: i64,
-) -> (Status, Json<Vec<model::highscore::Highscore>>) {
+) -> (Status, Json<Vec<HighscoreDTO>>) {
     let highscores = highscore
         .get_highscores(page, page_size)
         .expect("Failed to get highscore");
 
-    (Status::Ok, Json(highscores))
+    (
+        Status::Ok,
+        Json(
+            highscores
+                .iter()
+                .map(|score| HighscoreDTO {
+                    id: score.id,
+                    name: score.name.clone(),
+                    score: score.score,
+                    created_at: score.created_at.assume_offset(time::UtcOffset::UTC),
+                })
+                .collect::<Vec<HighscoreDTO>>(),
+        ),
+    )
 }

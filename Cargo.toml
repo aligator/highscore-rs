@@ -16,5 +16,5 @@ diesel_migrations = "2.1.0"
 dotenvy = "0.15.7"
 rocket = { version = "0.5.0-rc.3", features = ["json"] }
 serde = "1.0.181"
-time = { version = "0.3.23", features = ["serde"] }
+time = { version = "0.3.23", features = ["serde", "formatting", "macros"] }
 anyhow = "1.0"
