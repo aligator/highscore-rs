@@ -39,3 +39,10 @@ pub struct HighscoreDTO {
     #[schemars(example = "example_timestamp")]
     pub created_at: String,
 }
+
+#[derive(JsonSchema, Serialize)]
+#[serde(crate = "rocket::serde", deny_unknown_fields)]
+pub struct HighscoresDTO {
+    pub highscores: Vec<HighscoreDTO>,
+    pub total: i64,
+}

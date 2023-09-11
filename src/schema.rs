@@ -6,5 +6,6 @@ diesel::table! {
         name -> Text,
         score -> BigInt,
         created_at -> Timestamp,
+        game -> Text,
     }
 }

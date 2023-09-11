@@ -7,6 +7,7 @@ use time::PrimitiveDateTime;
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]
 pub struct CreateHighscore {
     pub name: String,
+    pub game: String,
     pub score: i64,
 }
 

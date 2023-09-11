@@ -3,7 +3,7 @@ use rocket::serde::json::Json;
 use rocket::{get, post, Route, State};
 use rocket_okapi::{openapi, openapi_get_routes};
 
-use crate::api::dto::highscore::{HighscoreDTO, NewHighscoreDTO};
+use crate::api::dto::highscore::{HighscoreDTO, HighscoresDTO, NewHighscoreDTO};
 use crate::api::dto::IdDTO;
 use crate::model;
 use crate::service::highscore::HighscoreService;
@@ -16,8 +16,9 @@ pub fn routes() -> Vec<Route> {
 ///
 /// Returns the id of the newly created highscore.
 #[openapi(tag = "Highscore")]
-#[post("/highscore", data = "<new_highscore>")]
+#[post("/highscore/<game>", data = "<new_highscore>")]
 async fn create_highscore(
+    game: String,
     highscore: &State<HighscoreService>,
     new_highscore: Json<NewHighscoreDTO>,
 ) -> (Status, Json<IdDTO>) {
@@ -25,6 +26,7 @@ async fn create_highscore(
         .create_highscore(model::highscore::CreateHighscore {
             name: new_highscore.name.clone(),
             score: new_highscore.score,
+            game,
         })
         .expect("Failed to create highscore");
 
@@ -35,32 +37,33 @@ async fn create_highscore(
 ///
 /// Returns a list of highscore entries.
 #[openapi(tag = "Highscore")]
-#[get("/highscore?<page>&<page_size>")]
+#[get("/highscore/<game>?<page>&<page_size>")]
 async fn get_highscores(
     highscore: &State<HighscoreService>,
+    game: String,
     page: i64,
     page_size: i64,
-) -> (Status, Json<Vec<HighscoreDTO>>) {
-    let highscores = highscore
-        .get_highscores(page, page_size)
+) -> (Status, Json<HighscoresDTO>) {
+    let (highscores, total) = highscore
+        .get_highscores(game, page, page_size)
         .expect("Failed to get highscore");
 
-    (
-        Status::Ok,
-        Json(
-            highscores
-                .iter()
-                .map(|score| HighscoreDTO {
-                    id: score.id,
-                    name: score.name.clone(),
-                    score: score.score,
-                    created_at: score
-                        .created_at
-                        .assume_offset(time::UtcOffset::UTC)
-                        .format(&crate::serde::ISO8601_FORMAT)
-                        .expect("Failed to format date"),
-                })
-                .collect::<Vec<HighscoreDTO>>(),
-        ),
-    )
+    let result: HighscoresDTO = HighscoresDTO {
+        total,
+        highscores: highscores
+            .iter()
+            .map(|score| HighscoreDTO {
+                id: score.id,
+                name: score.name.clone(),
+                score: score.score,
+                created_at: score
+                    .created_at
+                    .assume_offset(time::UtcOffset::UTC)
+                    .format(&crate::serde::ISO8601_FORMAT)
+                    .expect("Failed to format date"),
+            })
+            .collect::<Vec<HighscoreDTO>>(),
+    };
+
+    (Status::Ok, Json(result))
 }

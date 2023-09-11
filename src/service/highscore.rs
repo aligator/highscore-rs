@@ -1,4 +1,4 @@
-use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl};
+use diesel::{Connection, ExpressionMethods, QueryDsl, RunQueryDsl};
 
 use crate::db::DB;
 use crate::model;
@@ -29,17 +29,32 @@ impl HighscoreService {
 
     pub fn get_highscores(
         &self,
+        game: String,
         page: i64,
         page_size: i64,
-    ) -> Result<Vec<model::highscore::Highscore>, diesel::result::Error> {
+    ) -> Result<(Vec<model::highscore::Highscore>, i64), diesel::result::Error> {
         let mut conn = self.db.pool.get().unwrap();
 
-        let highscores = schema::highscore::dsl::highscore
-            .order(schema::highscore::dsl::score.desc())
-            .limit(page_size)
-            .offset(page * page_size)
-            .load::<model::highscore::Highscore>(&mut conn)?;
+        conn.transaction(|connection| {
+            let highscores = schema::highscore::dsl::highscore
+                .select((
+                    schema::highscore::dsl::id,
+                    schema::highscore::dsl::name,
+                    schema::highscore::dsl::score,
+                    schema::highscore::dsl::created_at,
+                ))
+                .filter(schema::highscore::dsl::game.eq(game.clone()))
+                .order(schema::highscore::dsl::score.desc())
+                .limit(page_size)
+                .offset(page * page_size)
+                .load::<model::highscore::Highscore>(connection)?;
 
-        Ok(highscores)
+            let total = schema::highscore::dsl::highscore
+                .filter(schema::highscore::dsl::game.eq(game))
+                .count()
+                .get_result(connection)?;
+
+            Ok((highscores, total))
+        })
     }
 }
