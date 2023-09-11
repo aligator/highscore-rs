@@ -19,7 +19,7 @@ impl HighscoreService {
     ) -> Result<i32, diesel::result::Error> {
         let mut conn = self.db.pool.get().unwrap();
 
-        let inserted: i32 = diesel::insert_into(schema::highscore::dsl::highscore)
+        let inserted = diesel::insert_into(schema::highscore::dsl::highscore)
             .values(&highscore)
             .returning(schema::highscore::dsl::id)
             .get_result(&mut conn)?;

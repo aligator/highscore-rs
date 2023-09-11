@@ -13,7 +13,7 @@ FROM debian:bookworm-slim
 
 RUN apt update && apt upgrade --yes && apt install --yes libsqlite3-0 && rm -rf /var/lib/apt/lists/*
 
-ENV HIGHSCORE_DATABASE_URL=/data/highscore.sqlite
+ENV DATABASE_URL=/data/highscore.sqlite
 ENV ROCKET_ADDRESS=0.0.0.0
 
 RUN mkdir /data

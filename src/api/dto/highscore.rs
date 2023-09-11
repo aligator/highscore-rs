@@ -4,5 +4,5 @@ use rocket::serde::Deserialize;
 #[serde(crate = "rocket::serde")]
 pub struct NewHighscoreDTO {
     pub name: String,
-    pub score: i32,
+    pub score: i64,
 }

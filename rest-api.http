@@ -4,7 +4,7 @@ Accept: application/json
 
 {
   "name": "HUHU",
-  "score": 999999999
+  "score": 9999
 }
 
 ### Get all highscores

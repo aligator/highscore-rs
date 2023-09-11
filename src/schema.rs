@@ -4,7 +4,7 @@ diesel::table! {
     highscore (id) {
         id -> Integer,
         name -> Text,
-        score -> Integer,
+        score -> BigInt,
         created_at -> Timestamp,
     }
 }

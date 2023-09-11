@@ -1,6 +1,6 @@
-use std::env;
-use dotenvy::dotenv;
 use anyhow::Result;
+use dotenvy::dotenv;
+use std::env;
 
 pub struct Config {
     pub database_url: String,
@@ -13,7 +13,7 @@ fn var(key: &str) -> Result<String> {
 impl Config {
     pub fn from_env() -> Result<Self> {
         dotenv().ok();
-        let database_url = var("HIGHSCORE_DATABASE_URL")?;
+        let database_url = var("DATABASE_URL")?;
         Ok(Config { database_url })
     }
 }
