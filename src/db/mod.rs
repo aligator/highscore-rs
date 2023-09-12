@@ -30,6 +30,5 @@ pub fn init_pool(cfg: &config::Config) -> DB {
         pool: r2d2::Pool::new(manager).expect("db pool"),
     };
 
-    print!("{}", cfg.database_url);
     db
 }
