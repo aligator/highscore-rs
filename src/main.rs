@@ -8,8 +8,6 @@ use rocket::{Orbit, Rocket};
 use rocket_okapi::rapidoc::{make_rapidoc, GeneralConfig, HideShowConfig, RapiDocConfig};
 use rocket_okapi::settings::UrlObject;
 use rocket_okapi::swagger_ui::{make_swagger_ui, SwaggerUIConfig};
-use serde::Serialize;
-use structured_logger::Builder;
 
 use crate::config::Config;
 
@@ -44,11 +42,6 @@ impl Fairing for StartupFairing {
 #[rocket::main]
 async fn main() -> Result<(), Box<dyn Error>> {
     let cfg = Config::from_env()?;
-
-    if cfg.json_logger {
-        // Initialize the logger.
-        Builder::new().init();
-    }
 
     let db = db::init_pool(&cfg);
 
