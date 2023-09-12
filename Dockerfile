@@ -22,7 +22,7 @@ ENV ROCKET_ADDRESS=0.0.0.0
 RUN groupadd --gid ${GROUP_ID} highscore && \
     useradd --uid ${USER_ID} --gid highscore --shell /bin/bash --create-home highscore && \
     mkdir /home/highscore/data && \
-    chown -R highscore:highscore /home/highscore
+    chown -R highscore:highscore /home/highscore/data
 
 USER $USER_ID:$GROUP_ID
 
