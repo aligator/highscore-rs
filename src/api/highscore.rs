@@ -59,7 +59,7 @@ async fn get_highscores(
                 created_at: score
                     .created_at
                     .assume_offset(time::UtcOffset::UTC)
-                    .format(&crate::serde::ISO8601_FORMAT)
+                    .format(&crate::format::ISO8601_FORMAT)
                     .expect("Failed to format date"),
             })
             .collect::<Vec<HighscoreDTO>>(),

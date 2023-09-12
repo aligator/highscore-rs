@@ -2,30 +2,58 @@ extern crate rocket;
 
 use std::error::Error;
 
+use log::info;
+use rocket::fairing::{Fairing, Info, Kind};
+use rocket::{Orbit, Rocket};
 use rocket_okapi::rapidoc::{make_rapidoc, GeneralConfig, HideShowConfig, RapiDocConfig};
 use rocket_okapi::settings::UrlObject;
 use rocket_okapi::swagger_ui::{make_swagger_ui, SwaggerUIConfig};
+use serde::Serialize;
+use structured_logger::Builder;
 
 use crate::config::Config;
 
 mod api;
 mod config;
 pub mod db;
+pub mod format;
 pub mod model;
 pub mod schema;
-pub mod serde;
 pub mod service;
+
+struct StartupFairing;
+
+#[rocket::async_trait]
+impl Fairing for StartupFairing {
+    fn info(&self) -> Info {
+        Info {
+            name: "Startup Fairing",
+            kind: Kind::Liftoff,
+        }
+    }
+
+    async fn on_liftoff(&self, rocket: &Rocket<Orbit>) {
+        info!(
+            "📝 API docu: http://{}:{}/swagger-ui/",
+            rocket.config().address,
+            rocket.config().port
+        );
+    }
+}
 
 #[rocket::main]
 async fn main() -> Result<(), Box<dyn Error>> {
     let cfg = Config::from_env()?;
-    let db = db::init_pool(cfg);
+
+    if cfg.json_logger {
+        // Initialize the logger.
+        Builder::new().init();
+    }
+
+    let db = db::init_pool(&cfg);
 
     // Setup the services.
     let highscore_service = service::highscore::HighscoreService::new(db);
-
-    let routes = api::highscore_routes();
-    print!("{:?}", routes);
 
     rocket::build()
         .mount("/", api::highscore_routes())
@@ -52,6 +80,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
             }),
         )
         .manage(highscore_service)
+        .attach(StartupFairing {})
         .launch()
         .await?;
 

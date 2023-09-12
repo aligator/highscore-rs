@@ -1,9 +1,11 @@
+use std::env;
+
 use anyhow::Result;
 use dotenvy::dotenv;
-use std::env;
 
 pub struct Config {
     pub database_url: String,
+    pub json_logger: bool,
 }
 
 fn var(key: &str) -> Result<String> {
@@ -14,6 +16,10 @@ impl Config {
     pub fn from_env() -> Result<Self> {
         dotenv().ok();
         let database_url = var("DATABASE_URL")?;
-        Ok(Config { database_url })
+        let json_logger = var("JSON_LOGGER").unwrap_or("0".to_string()) == "1";
+        Ok(Config {
+            database_url,
+            json_logger,
+        })
     }
 }

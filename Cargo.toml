@@ -19,4 +19,6 @@ rocket_okapi = { version = "0.8.0-rc.3", features = ["swagger", "rapidoc"] }
 schemars = { version = "0.8.13" }
 serde = "1.0.181"
 time = { version = "0.3.23", features = ["serde", "formatting", "macros"] }
+log = { version = "0.4.19", features = ['std'] }
+structured-logger = "1.0.3"
 anyhow = "1.0"

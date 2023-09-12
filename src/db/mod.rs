@@ -22,13 +22,14 @@ fn run_migrations(database_url: String) -> Result<(), Box<dyn Error + Send + Syn
     Ok(())
 }
 
-pub fn init_pool(cfg: config::Config) -> DB {
+pub fn init_pool(cfg: &config::Config) -> DB {
     run_migrations(cfg.database_url.clone()).expect("db migrations");
 
-    let manager = ConnectionManager::<SqliteConnection>::new(cfg.database_url);
+    let manager = ConnectionManager::<SqliteConnection>::new(&cfg.database_url);
     let db = DB {
         pool: r2d2::Pool::new(manager).expect("db pool"),
     };
 
+    print!("{}", cfg.database_url);
     db
 }
