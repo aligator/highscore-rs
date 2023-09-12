@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  highscore:
+    #build: .
+    image: ghcr.io/aligator/highscore-rs:latest
+
+    restart: unless-stopped
+    ports:
+      - 8000:8000
+    environment:
+      ROCKET_LOG_LEVEL: normal
+    volumes:
+      - highscore:/home/highscore/data
+
+volumes:
+    highscore:
