@@ -21,3 +21,4 @@ serde = "1.0.181"
 time = { version = "0.3.23", features = ["serde", "formatting", "macros"] }
 log = { version = "0.4.19", features = ['std'] }
 anyhow = "1.0"
+rocket_cors = "0.5.2"
