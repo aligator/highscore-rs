@@ -48,8 +48,9 @@ async fn main() -> Result<(), Box<dyn Error>> {
     // Setup the services.
     let highscore_service = service::highscore::HighscoreService::new(db);
 
+    let cors = rocket_cors::CorsOptions::default().to_cors()?;
+
     rocket::build()
-        .attach(rocket_cors::CorsOptions::default().to_cors()?)
         .mount("/", api::highscore_routes())
         .mount(
             "/swagger-ui/",
@@ -74,6 +75,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
             }),
         )
         .manage(highscore_service)
+        .attach(cors)
         .attach(StartupFairing {})
         .launch()
         .await?;
